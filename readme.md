@@ -21,5 +21,3 @@ This is the course project for CS5228 (Knowledge Discovery & Data Mining) @ NUS 
 <br>
 <b>6 ./utils</b> : Contains util functions needed throughout the project (e.g. manipulating google drive from colab/matplotlib code)
 <br>
-
-
