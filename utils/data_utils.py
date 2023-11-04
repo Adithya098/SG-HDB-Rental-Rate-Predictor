@@ -1,5 +1,5 @@
 import math
-import pandas as pd
+
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------
 # For computing haversine distances
@@ -31,6 +31,7 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     # Calculate the distance
     distance = earth_radius_km * c
 
+    # returns distance in meters
     return distance * 1000
 
 
@@ -135,7 +136,6 @@ def calculate_distance_to_nearest_school(list1, list2):
         distances_to_all_school = []
         for point2 in list2:
             lat2, lon2 = point2
-            # distance = (geodesic(point1, point2).kilometers ) * 1000
             distance = haversine_distance(lat1, lon1, lat2, lon2)
             distances_to_all_school.append(distance)
         distance_to_closest_school = min(distances_to_all_school)
@@ -245,7 +245,7 @@ def to_lower(df):
     return df
 
 
-def flat_type_to_lower_case(df):
+def ordinalize_flat_type(df):
     """Normalize flat_type column. Replace the string with the number of rooms.
        Eg "3-rooms" will be "3".
         only for "Executive" type we will replace it with an ordinal value of 6
@@ -273,64 +273,44 @@ def count_planning_areas(df):
     print("Number of rows which have `planning_area` as a subset of `town` = ", count)
 
 
-def get_ordinality_for_flat_type(df):
+def get_ordinality_for_flat_model(df):
     '''
-    Assign an ordinality for the flat_type column
+    ordinalizing the flat type + flat model combination
 
     :param df:
     :return:
     '''
-    # TODO. need to implement this ordinality
+    #combining the flat-type and flat-model into one concatenated string
+    df['combined_column'] = df['flat_type'].astype(str) + df['flat_model'].str.replace(' ', '')
+    combined_values = df['combined_column'].unique()
+
+    # for each combination we are keeping track of the min and max values
+    flat_combos = dict()
+    for value in combined_values:
+        min_val = df[df['combined_column'] == value]['floor_area_sqm'].min()
+        max_val = df[df['combined_column'] == value]['floor_area_sqm'].max()
+        flat_combos[value] = {
+            "min_sqm": min_val,
+            "max_sqm": max_val
+        }
+
+    #find the average flat_sq area
+    for flat_combo in flat_combos.keys():
+        flat_combos[flat_combo] = flat_combos[flat_combo]["min_sqm"] + flat_combos[flat_combo]["max_sqm"]
+
+    #sort by flat sq area
+    flat_combo_ordinal = {}
+    sort_flat_combos_by_area = sorted(flat_combos.items(), key=lambda combo: combo[1])
+
+    #find the ordinalily by finding the index of the flat combo after sorting by avg sqm
+    for item in sort_flat_combos_by_area:
+        flat_combo, avg_sqm = item
+        flat_combo_ordinal[flat_combo] = sort_flat_combos_by_area.index(item)
+
+    df['flat_type_model'] = df.apply(lambda x: flat_combo_ordinal[str(x['combined_column'])], axis=1)
+
+    #deleting unnecessary columns
+    df = delete_column(df, 'combined_column')
+    df = delete_column(df, 'flat_model')
+
     return df
-
-
-def clean_and_normalize(df):
-    """Method which cleans the train data
-
-    Args:
-        df (pandas dataframe): Dataframe which to to be cleaned
-
-    Returns:
-        df_cleaned: Cleaned dataframe
-    """    ''''''
-    # remove duplicates
-    df_no_duplicate = duplicate(df)
-
-    # convert to lower case
-    df_elevation_to_lower_case = to_lower(df_no_duplicate)
-    df_flat_type_lower_case = flat_type_to_lower_case(df_elevation_to_lower_case)
-
-    # delete columns
-    df_elevation_delete = delete_column(df_flat_type_lower_case, "elevation")
-    df_furnished_delete = delete_column(df_elevation_delete, "furnished")
-    count_planning_areas(df_furnished_delete)
-    df_elevation_delete = delete_column(df_furnished_delete, "planning_area")
-    df_block_delete = delete_column(df_elevation_delete, "block")
-    df_street_name_delete = delete_column(df_block_delete, "street_name")
-    df_delete = df_street_name_delete
-
-    # convert all date time to unix
-    # Convert the 'date' column to a datetime object with day set to 01
-    df_delete['rent_approval_date'] = pd.to_datetime(df_delete['rent_approval_date'] + '-01', format='%Y-%m-%d')
-
-    # Convert the datetime objects to Unix timestamps in seconds
-    df_delete['rent_approval_date'] = (df_delete['rent_approval_date'] - pd.Timestamp("1970-01-01")) // pd.Timedelta(seconds=1)
-
-    # Find out ordinality order for flat_type
-    df_flat_type_ordinality = get_ordinality_for_flat_type(df_delete)
-    df_unnormalized = df_flat_type_ordinality
-
-    # Normalize all values
-    df_unnormalized = normalize_column(df_unnormalized, "rent_approval_date")
-    df_unnormalized = normalize_column(df_unnormalized, "floor_area_sqm")
-    df_unnormalized = normalize_column(df_unnormalized, "lease_commence_date")
-    df_unnormalized = normalize_column(df_unnormalized, "distance_to_nearest_existing_mrt")
-    df_unnormalized = normalize_column(df_unnormalized, "distance_to_nearest_planned_mrt")
-    df_unnormalized = normalize_column(df_unnormalized, "distance_to_nearest_school")
-    df_unnormalized = normalize_column(df_unnormalized, "distance_to_nearest_mall")
-    df_unnormalized = normalize_column(df_unnormalized, "coe_price_indicator")
-    df_normalized = normalize_column(df_unnormalized, "stock_price")
-
-    print("Number of rows after cleaning = ", len(df_normalized))
-    print("Number of columns after cleaning = ", df_normalized.shape[1])
-    return df_normalized
