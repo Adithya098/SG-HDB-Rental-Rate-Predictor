@@ -1,7 +1,8 @@
 import pandas as pd
+from config.params import *
 
 
-def transform_stock_prices(inp_path, out_path):
+def transform_stock_prices(inp_path, out_path=None, save=False):
     '''
     Take the original sg-stock-prices.csv and transform it to create a new transformed sg-stock-prices.csv which has the following columns
 
@@ -40,7 +41,7 @@ def transform_stock_prices(inp_path, out_path):
 
     # Create a date range with all months from the minimum to maximum date
     start_date = pd.to_datetime('2021-01', format='%Y-%m')
-    end_date = pd.to_datetime('2023-12', format='%Y-%m')
+    end_date = pd.to_datetime('2024-01', format='%Y-%m')
     date_range = pd.date_range(start=start_date, end=end_date, freq='M')
     date_df = pd.DataFrame({'date': date_range})
     date_df["date"] = date_df["date"].dt.strftime('%Y-%m')
@@ -64,14 +65,16 @@ def transform_stock_prices(inp_path, out_path):
     # drop the year and month from this
     merged_df = merged_df.drop(columns=["year", "month"])
 
-    # save this df into the output file
-    merged_df.to_csv(out_path, index=False)
+    if save:
+        assert out_path != None
+        # save this df into the output file
+        merged_df.to_csv(out_path, index=False)
 
     # return the final df
     return merged_df
 
 
-if __name__ == '__main__':
-    inp_path = "../../datasets/auxiliary-data/sg-stock-prices.csv"
-    out_path = "../../datasets/transformed/sg-stock-prices.csv"
-    print(transform_stock_prices(inp_path, out_path))
+# if __name__ == '__main__':
+#     inp_path = "../../datasets/auxiliary-data/sg-stock-prices.csv"
+#     out_path = "../../datasets/transformed/sg-stock-prices.csv"
+#     print(transform_stock_prices(inp_path, out_path))

@@ -21,3 +21,23 @@ This is the course project for CS5228 (Knowledge Discovery & Data Mining) @ NUS 
 <br>
 <b>6 ./utils</b> : Contains util functions needed throughout the project (e.g. manipulating google drive from colab/matplotlib code)
 <br>
+
+## <u> TODO </u>
+
+1. Pending things to do in EDA: 
+- Prof comments:
+*  target encoding nominal attributes with a large number of values - Adi will look into this
+- Review existing code
+- check haversine implementation again
+* EDA flow  - normalization -> sklearn min-max?
+- look at ordinal type for flat type
+- redo the ipynb with step by step explanation for each eda step (X)
+- recheck the report generation after eda
+- Reformat the "Are Economic Indicators even useful" ipynb into "what columns are useful" using spearman 
+
+2. Find importance of an area or town using Page Rank centrality:
+- We are doing two approaches town wise importance, importance to nearest entity
+
+3. Train KNN with new dataset -> vanilla & haversine
+4. Train Neural Network with dataset
+5. Write TODOs for other teammates
