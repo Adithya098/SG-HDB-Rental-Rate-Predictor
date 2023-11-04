@@ -35,64 +35,44 @@ This is the course project for CS5228 (Knowledge Discovery & Data Mining) @ NUS 
 
 ## <u> TODO </u>
 
-1. Pending things to do in EDA: 
-- Prof comments:
-*  target encoding nominal attributes with a large number of values - basically imputation
-- Review existing code
-- check haversine implementation again
-* EDA flow  - normalization -> sklearn min-max?
-- look at ordinal type for flat type
-- redo the ipynb with step by step explanation for each eda step (X)
-- recheck the report generation after eda
-- Reformat the "Are Economic Indicators even useful" ipynb into "what columns are useful" using spearman 
+Adithya
+* Create a new branch from main called 'feature/tree'
+* In /experiments create a new directory called 'tree-based-models' and make it a python module by having an empty __init__.py file.
+* Create an ipynb notebook which evaluates the following models(the ipynb should be readable like a story - you can refer to the EDA ipynb, so that the thought process is clear):
+  - Decision-Tree Regressor 
+  - XGBoost Regressor 
+  - AdaBoost Regressor 
+  - Any other XG (Gradient) based Regressors recommended by ChatGPT 
+* For each model, use GridSearchCV to find the best hyperparameters
+* For each model there should be a csv output file, which should be directly uploaded on Kaggle.
+*  save_test_predictions_in_kaggle_format() - Use this function to save each model's output csv files and keep it handy/committed on git
 
-2. Find importance of an area or town using Page Rank centrality:
-- We are doing two approaches town wise importance, importance to nearest entity
-
-3. Train KNN with new dataset -> vanilla & haversine
-4. Train Neural Network with dataset
-5. Write TODOs for other teammates
-
-
-DATASET EDA TO DO:
+Parashara
+* Use the new cleaned dataset to run vanilla KNN and fix Haversine-KNN's C-Python error
+* Verify and Merge everyone's code
+* Add a comprehensive readme file which introduces the structure of project, folder, ipynb, and links to ipynbs
 
 
-X:
+Poornima
+* Create a new branch from main called 'feature/others'
+* In /experiments create a new directory called 'tree-based-models' and make it a python module by having an empty __init__.py file.
+* Create an ipynb notebook which evaluates the following models(the ipynb should be readable like a story - you can refer to the EDA ipynb, so that the thought process and code is clear, which makes it easier to prepare final report):
+  - Linear Regression 
+  - SVM Regressor (use different kernels and read more about RBF Kernels) 
+  - Any other Regressors recommended by ChatGPT which has not been covered by our team yet
+* For each model, use GridSearchCV to find the best hyperparameters
+* For each model there should be a csv output file, which should be directly uploaded on Kaggle.
+*  save_test_predictions_in_kaggle_format() - Use this function to save each model's output csv files and keep it handy/committed on git
 
-Waiting:
-town_importance = will be normalized
-nearest_mrt_importance = will be normalized
-flat_type =  ordinal - adi
-flat_model = ordinal - adi
+Sriram
+* Story-telling for "X-factor" in the EDA notebook + accommodate normalization of ordinal columns in this notebook
+* In data/analysis, create a new ipynb notebook, called Dataset_Analysis_After_EDA
+  - Generate report using Pandas Profiling
+  - Spearman code
+  - in EDA notebook, make a reference to these analysis notebooks
+* Add any pics I use under "resources"
+* Build an NN - usual stuff - dropout, weight decay, lr etc
 
-Done:
-
-coe_price_indicator = already normalized X
-stock_price = already normalized X
-latitude  = nothing X 
-longitude = nothing X
-elevation = delete (same reason from ipynb)
-furnished = delete (same reason from ipynb)
-planning_area = delete (same reason from ipynb)
-block = delete (not important as we have other details)
-street_name = delete (too many to one hot encode)
-subzone = delete (because most of the towns have this name)
-rent_approval_date = unix time stamp -> normalize
-region = one hot encoding
-town = one hot encoding
-
-
-TODO:
-
-
-lease_commence_date = normalize
-floor_area_sqm = normalize
-distance_to_nearest_existing_mrt= normalize 
-distance_to_nearest_planned_mrt = normalize 
-distance_to_nearest_school      = normalize 
-distance_to_nearest_mall        = normalize 
-
-Y:
-
-monthly_rent 
+Note For Team:
+* We will try to finish by Sunday 8pm and have a call to discuss the template for final report - 8 pages
 

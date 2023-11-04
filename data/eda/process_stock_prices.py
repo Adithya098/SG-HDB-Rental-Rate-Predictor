@@ -3,7 +3,7 @@ from config.params import *
 
 def transform_stock_prices(inp_path, out_path=None, save=False):
     '''
-    Take the original sg-stock-prices.csv and transform it to create a new transformed sg-stock-prices.csv which has the following columns
+    Take the original sg-stock-prices.csv and transform it to create a new final sg-stock-prices.csv which has the following columns
 
     date, stock_price_indicator
 
@@ -11,7 +11,7 @@ def transform_stock_prices(inp_path, out_path=None, save=False):
 
     :param inp_path: input csv path
     :param out_path: output csv path for storing the new dataframe
-    :return: transformed dataframe
+    :return: final dataframe
     '''
     stock_prices_df = pd.read_csv(inp_path)
 
@@ -77,5 +77,5 @@ def transform_stock_prices(inp_path, out_path=None, save=False):
 
 if __name__ == '__main__':
     inp_path = "../../datasets/auxiliary-data/sg-stock-prices.csv"
-    out_path = "../../datasets/transformed/sg-stock-prices.csv"
+    out_path = "../../datasets/final/sg-stock-prices.csv"
     print(transform_stock_prices(inp_path, out_path))

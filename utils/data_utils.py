@@ -1,5 +1,7 @@
 import math
 
+import pandas as pd
+
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------
 # For computing haversine distances
@@ -172,6 +174,143 @@ def calculate_distance_to_nearest_mall(list1, list2):
 
 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#Function to find the number of MRTs within the radius
+def calculate_mrts_within_town_radius(list1, list2):
+    '''
+    For all towns, find the number of MRTs that are within a 3km radius from town's centres
+
+    :param list1: town lat long
+    :param list2: mrt lat long
+    :return:
+    '''
+
+    number_of_mrts_under_town = [0] * len(list1)
+    town_counter = 0
+    for point1 in list1:
+        lat1, lon1 = point1
+        for point2 in list2:
+            lat2, lon2 = point2
+            # distance = (geodesic(point1, point2).kilometers ) * 1000
+            distance = haversine_distance(lat1, lon1, lat2, lon2)
+            if distance <= 2700: # if it is within a 2700m or 2.7km radius
+                number_of_mrts_under_town[town_counter] +=1
+        town_counter +=1
+    return number_of_mrts_under_town
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Function to calculate schools within the radius
+
+def calculate_schools_within_town_radius(list1, list2):
+    '''
+    For all towns, find the number of schools that are within a 3km radius from town's centres
+
+    :param list1: town lat long
+    :param list2: schools lat long
+    :return:
+    '''
+
+    number_of_schools_under_town = [0] * len(list1)
+    town_counter = 0
+    for point1 in list1:
+        lat1, lon1 = point1
+        for point2 in list2:
+            lat2, lon2 = point2
+            # distance = (geodesic(point1, point2).kilometers ) * 1000
+            distance = haversine_distance(lat1, lon1, lat2, lon2)
+            if distance <= 2700: # if it is within a 3000m or 3km radius
+                number_of_schools_under_town[town_counter] +=1
+        town_counter +=1
+    return number_of_schools_under_town
+
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Function to calculate the number of malls within the town radius
+def calculate_malls_within_town_radius(list1, list2):
+    '''
+    For all towns, find the number of malls that are within a 3km radius from town's centres
+
+    :param list1: town lat long
+    :param list2: malls lat long
+    :return:
+    '''
+
+    number_of_malls_under_town = [0] * len(list1)
+    town_counter = 0
+    for point1 in list1:
+        lat1, lon1 = point1
+        for point2 in list2:
+            lat2, lon2 = point2
+            # distance = (geodesic(point1, point2).kilometers ) * 1000
+            distance = haversine_distance(lat1, lon1, lat2, lon2)
+            if distance <= 2700: # if it is within a 3000m or 3km radius
+                number_of_malls_under_town[town_counter] +=1
+        town_counter +=1
+    return number_of_malls_under_town
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Function to calculate "importance" score of towns
+
+def calculate_importance_score_of_towns(number_of_mrts_under_town, number_of_mrts_planned_under_town,
+                                        number_of_schools_under_town, number_of_malls_under_town):
+    no_of_towns = len(number_of_mrts_under_town)
+    importance_score_of_towns = []
+    for i in range(no_of_towns):
+        importance_score = (number_of_mrts_under_town[i] * 0.4) + (number_of_mrts_planned_under_town[i] * 0.2) + (
+                    number_of_schools_under_town[i] * 0.2) + (number_of_malls_under_town[i] * 0.2)
+        importance_score_of_towns.append(importance_score)
+
+    return importance_score_of_towns
+
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Function to populate the centroid distance matrix
+
+def populate_centroid_distance_matrix(lat_long_of_towns):
+    centroid_distance_matrix = []
+    for point1 in lat_long_of_towns:
+        lat1, lon1 = point1
+        distance_row = []
+        for point2 in lat_long_of_towns:
+            lat2, lon2 = point2
+            # distance = (geodesic(point1, point2).kilometers ) * 1000
+            distance = haversine_distance(lat1, lon1, lat2, lon2)
+            distance_row.append(distance)
+        centroid_distance_matrix.append(distance_row)
+    return  centroid_distance_matrix
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Function to calculate the centrality
+def calculate_centrality(importance, d, num_towns):
+    # Initialize variables
+    num_iterations = 100  # Number of iterations
+    damping_factor = 0.85  # Damping factor for PageRank
+
+    # Initialize PageRank scores
+    PageRank = [1.0 / num_towns] * num_towns
+
+    # Main PageRank computation loop
+    for iteration in range(num_iterations):
+        new_PageRank = [0] * num_towns
+
+        for town_i in range(num_towns):
+            new_PageRank[town_i] = (1 - damping_factor) / num_towns
+
+            for town_j in range(num_towns):
+                if town_i != town_j:
+                    # Calculate the influence from town_j to town_i based on distance and importance
+                    influence = PageRank[town_j] / (d[town_j][town_i] + 1) * importance[town_j]
+                    new_PageRank[town_i] += damping_factor * influence
+
+        PageRank = new_PageRank
+
+    # Normalize PageRank scores
+    sum_PageRank = sum(PageRank)
+    PageRank = [score / sum_PageRank for score in PageRank]
+    return PageRank
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 # Functions related to eda
 def min_max_scaling(column):
     '''
@@ -184,6 +323,11 @@ def min_max_scaling(column):
     scaled_column = (column - min_val) / (max_val - min_val)
     return scaled_column
 
+def gaussian_scaling(column):
+    mean = column.mean()
+    std_dev = column.std()
+    normalized_column = (column - mean) / std_dev
+    return normalized_column
 
 def normalize_column(df, col_name):
     '''
@@ -195,6 +339,8 @@ def normalize_column(df, col_name):
     '''
     # Apply the min-max scaling function to the specified column
     df[col_name] = min_max_scaling(df[col_name])
+    #df[col_name] = gaussian_scaling(df[col_name])
+
     return df
 
 
@@ -256,7 +402,7 @@ def ordinalize_flat_type(df):
     Returns:
         df: Dataframe after normalizing for flat_type 
     """    ''''''
-    df['flat_type'] = df['flat_type'].apply(lambda value: '6' if value[0] == 'e' else value[0])
+    df['flat_type'] = df['flat_type'].apply(lambda value: 6 if value[0] == 'e' else int(value[0]))
     return df
 
 
@@ -314,3 +460,19 @@ def get_ordinality_for_flat_model(df):
     df = delete_column(df, 'flat_model')
 
     return df
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Function to save the model predictions on test data as per Kaggle submission format
+
+def save_test_predictions_in_kaggle_format(array, experiment=None, save=False):
+    # Create a DataFrame with "Id" and "Predicted" columns
+    df = pd.DataFrame({'Id': range(len(array)), 'Predicted': array})
+
+    if save:
+        assert experiment != None
+        # Save the DataFrame to a CSV file
+        df.to_csv(f"{experiment}-submission.csv", index=False)
+
+    return df
+
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------

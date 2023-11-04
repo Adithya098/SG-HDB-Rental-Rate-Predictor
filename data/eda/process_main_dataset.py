@@ -57,11 +57,66 @@ def normalize_dataset(df_unnormalized):
     df_unnormalized = normalize_column(df_unnormalized, "distance_to_nearest_school")
     df_unnormalized = normalize_column(df_unnormalized, "distance_to_nearest_mall")
     df_unnormalized = normalize_column(df_unnormalized, "coe_price_indicator")
-    df_normalized = normalize_column(df_unnormalized, "stock_price")
+    df_unnormalized = normalize_column(df_unnormalized, "stock_price")
+    df_unnormalized = normalize_column(df_unnormalized, "flat_type")
+    df_unnormalized = normalize_column(df_unnormalized, "flat_type_model")
+    df_normalized = normalize_column(df_unnormalized, "town_importance")
+
     return df_normalized
 
+def merge_loc_with_coe(df_loc, df_coe):
+    rent_date_coe_dict = {}
+    for index, row in df_coe.iterrows():
+        rent_date_coe_dict[row['rent_approval_date']] = row['coe_price_indicator']
+    #for index, row in df_loc.iterrows():
+    #   df_loc.at[index,'coe_price_indicator' ] = rent_date_coe_dict[row['rent_approval_date']]
+    #df_loc['coe_price_indicator'] = rent_date_coe_dict[df_loc['rent_approval_date']]
 
-def merge_dataframes(df_with_locs, df_coe, df_stocks):
+    df_loc['coe_price_indicator'] = df_loc['rent_approval_date'].map(rent_date_coe_dict)
+
+    df_loc['coe_price_indicator'].fillna(0, inplace=True)
+
+    return df_loc
+
+def merge_df_with_stocks(df, df_stocks):
+    rent_date_stock_dict = {}
+    for index, row in df_stocks.iterrows():
+        rent_date_stock_dict[row['rent_approval_date']] = row['stock_price']
+    #for index, row in df.iterrows():
+    #    row['stock_price'] = rent_date_stock_dict[row['rent_approval_date']]
+    #df['stock_price'] = rent_date_stock_dict[df['rent_approval_date']]
+
+    df['stock_price'] = df['rent_approval_date'].map(rent_date_stock_dict)
+
+    df['stock_price'].fillna(0, inplace=True)
+
+    return df
+
+def merge_df_with_town_centrality(df, df_town_centrality):
+    importance_dict = {}
+    for index, row in df_town_centrality.iterrows():
+        importance_dict[row['town']] = row['importance']
+    centrality_dict = {}
+    for index, row in df_town_centrality.iterrows():
+        centrality_dict[row['town']] = row['centrality_page_rank']
+
+    #for row in df.iterrows():
+    #    row['importance'] = importance_dict[row['town']]
+    #    row['centrality'] = centrality_dict[row['town']]
+
+    #df['importance'] = importance_dict[df['town']]
+    #df['centrality'] = centrality_dict[df['town']]
+
+    df['town_importance'] = df['town'].map(importance_dict)
+    df['town_importance'].fillna(0, inplace=True)
+
+    df['town_centrality_page_rank'] = df['town'].map(centrality_dict)
+    df['town_centrality_page_rank'].fillna(0, inplace=True)
+
+
+    return df
+
+def merge_dataframes(df_with_locs, df_coe, df_stocks, df_with_town_centrality):
     '''
     Merge all the dataframes obtained so far
 
@@ -77,11 +132,16 @@ def merge_dataframes(df_with_locs, df_coe, df_stocks):
     df_stocks = df_stocks.drop(columns=["date"])
 
     # merge the dataframes together
-    #TODO.3 merge the new town importance df here!
-    merged_df = pd.merge(df_with_locs, df_coe, on='rent_approval_date', how='outer')
-    merged_df = pd.merge(merged_df, df_stocks, on='rent_approval_date', how='outer')
-
+    #merged_df = pd.merge(df_with_locs, df_coe, on='rent_approval_date', how='outer')
+    #merged_df = pd.merge(merged_df, df_stocks, on='rent_approval_date', how='outer')
+    #merged_df = pd.merge(merged_df, df_with_town_centrality, on = 'town', how = 'outer')
     # Drop rows where any column contains NaN values
-    merged_df = merged_df.dropna()
+    #merged_df = merged_df.dropna()
 
+    merged_df = merge_loc_with_coe(df_with_locs, df_coe)
+    merged_df = merge_df_with_stocks(merged_df, df_stocks)
+    merged_df = merge_df_with_town_centrality(merged_df, df_with_town_centrality)
+
+    merged_df = merged_df.dropna()
+    print("Dataframes Merge Completed")
     return merged_df

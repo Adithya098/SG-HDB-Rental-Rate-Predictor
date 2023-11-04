@@ -5,7 +5,7 @@ from utils.constants import month_to_num_map
 
 def transform_coe_prices(inp_path, out_path=None, save=False):
     '''
-    Take the original sg-coe-prices.csv and transform it to create a new transformed sg-coe-prices.csv which has the following columns
+    Take the original sg-coe-prices.csv and transform it to create a new final sg-coe-prices.csv which has the following columns
 
     date, coe_price_indicator
 
@@ -13,7 +13,7 @@ def transform_coe_prices(inp_path, out_path=None, save=False):
 
     :param inp_path: input csv path
     :param out_path: output csv path for storing the new dataframe
-    :return: transformed dataframe
+    :return: final dataframe
     '''
     coe_prices_df = pd.read_csv(inp_path)
     coe_prices_df["month"] = coe_prices_df["month"].map(month_to_num_map)
@@ -73,6 +73,6 @@ def transform_coe_prices(inp_path, out_path=None, save=False):
 
 if __name__ == '__main__':
     inp_path = "../../datasets/auxiliary-data/sg-coe-prices.csv"
-    out_path = "../../datasets/transformed/sg-coe-prices.csv"
+    out_path = "../../datasets/final/sg-coe-prices.csv"
     print(transform_coe_prices(inp_path, out_path))
 

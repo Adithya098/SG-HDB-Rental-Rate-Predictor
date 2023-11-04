@@ -42,21 +42,25 @@ def extract_distance_columns_from_aux_mrt_school_mall(train_input_path, mrt_inpu
     mrt_opening_year = df_mrt_planned['opening_year'].tolist()
 
     # calculate all distances and add it to the dataframe
+    print(" : Started calculating the distance to nearest existing mrt")
     distances_to_closest_mrt_for_all_houses = calculate_distance_to_nearest_mrt(lat_long_of_houses, lat_long_of_mrts)
     df_house['distance_to_nearest_existing_mrt'] = distances_to_closest_mrt_for_all_houses
-    print("Finished calculating the distance to nearest existing mrt")
+    print(" : Finished calculating the distance to nearest existing mrt")
 
+    print(" : Started calculating the distance to nearest planned mrt")
     distances_to_closest_mrt_planned_for_all_houses = calculate_distance_to_nearest_mrt_planned(lat_long_of_houses, house_rent_approval_year, lat_long_of_mrts_planned,mrt_opening_year)
     df_house['distance_to_nearest_planned_mrt'] = distances_to_closest_mrt_planned_for_all_houses
-    print("Finished calculating the distance to nearest planned mrt")
+    print(" : Finished calculating the distance to nearest planned mrt")
 
+    print(" : Started calculating the distance to nearest school")
     distances_to_closest_school_for_all_houses = calculate_distance_to_nearest_school(lat_long_of_houses, lat_long_of_school)
     df_house['distance_to_nearest_school'] = distances_to_closest_school_for_all_houses
-    print("Finished calculating the distance to nearest school")
+    print(" : Finished calculating the distance to nearest school")
 
+    print(" : Started calculating the distance to nearest mall")
     distances_to_closest_mall_for_all_houses = calculate_distance_to_nearest_mall(lat_long_of_houses, lat_long_of_malls)
     df_house['distance_to_nearest_mall'] = distances_to_closest_mall_for_all_houses
-    print("Finished calculating the distance to nearest mall")
+    print(" : Finished calculating the distance to nearest mall")
 
     if save:
         assert output_path != None
@@ -72,6 +76,6 @@ def extract_distance_columns_from_aux_mrt_school_mall(train_input_path, mrt_inpu
 #     mrt_planned_input_path = "../../datasets/auxiliary-data/sg-mrt-planned-stations.csv"
 #     mall_input_path = "../../datasets/auxiliary-data/sg-shopping-malls.csv"
 #     school_input_path = "../../datasets/auxiliary-data/sg-primary-schools.csv"
-#     output_path = "../../datasets/transformed/train_with_nearest_locations.csv"
+#     output_path = "../../datasets/final/train_with_nearest_locations.csv"
 #     extract_distance_columns_from_aux_mrt_school_mall(train_input_path, mrt_input_path, mrt_planned_input_path, mall_input_path, school_input_path, output_path)
 #     print("done")
