@@ -1,7 +1,7 @@
 import pandas as pd
 from utils.data_utils import duplicate, to_lower, ordinalize_flat_type, delete_column, count_planning_areas, get_ordinality_for_flat_model, normalize_column
 
-def clean_and_normalize(df):
+def clean_and_normalize(df, is_train=True):
     """Method which cleans the train data
 
     Args:
@@ -11,7 +11,7 @@ def clean_and_normalize(df):
         df_cleaned: Cleaned dataframe
     """    ''''''
     # clean dataset
-    df_unnormalized = clean_dataset(df)
+    df_unnormalized = clean_dataset(df, is_train)
 
     # Normalize all values
     df_normalized = normalize_dataset(df_unnormalized)
@@ -19,7 +19,7 @@ def clean_and_normalize(df):
     return df_normalized
 
 
-def clean_dataset(df):
+def clean_dataset(df, is_train=True):
     # 1. delete columns
     df_delete = delete_column(df, "elevation")
     df_delete = delete_column(df_delete, "furnished")
@@ -41,12 +41,14 @@ def clean_dataset(df):
 
     #5. one hot encode region and town
     df_onehot = pd.get_dummies(df_flat_type_ordinality, columns=['region'], prefix=['region'])
-    df_onehot = pd.get_dummies(df_onehot, columns=['town'], prefix=['town'])
+    df_final = pd.get_dummies(df_onehot, columns=['town'], prefix=['town'])
 
-    #5. remove duplicates
-    df_no_duplicate = duplicate(df_onehot)
+    if is_train:
+        print("Trying to remove duplicates as well")
+        #5. remove duplicates
+        df_final = duplicate(df_final)
 
-    return df_no_duplicate
+    return df_final
 
 def normalize_dataset(df_unnormalized):
     df_unnormalized = normalize_column(df_unnormalized, "rent_approval_date")
