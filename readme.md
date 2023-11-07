@@ -63,40 +63,40 @@ These cleaned datasets were then used to train each regression model which can b
 <br>
 
 <b>3. ./experiments</b>: This folder contains ipynb notebooks for various model experiments conducted
-- a. ./experiments/KNN: 
-  - knn.ipynb:
-  - haversine-knn-submission.csv:
-  - vanilla-knn-submission.csv:
+- a. ./experiments/KNN: Regressor using the K-Nearest Neighbour model
+  - knn.ipynb: ipynb file explaining how knn was used to predict the house rental prices
+  - haversine-knn-submission.csv: submission file to kaggle using the custom KNN model which uses haversine distances
+  - vanilla-knn-submission.csv: submission file to kaggle using the vanilla KNN model
 <br>
-- b. ./experiments/Neural Network: 
-  - neural_network.ipynb: 
-  - neural_network_best_model-submission.csv: 
+- b. ./experiments/Neural Network: Regressor using Neural Networks model
+  - neural_network.ipynb: ipynb file explaining how a neural networks based model was used to predict the house rental prices
+  - neural_network_best_model-submission.csv: submission file to kaggle using the best trained neural networks model
 <br>
-- c. ./experiments/Regression: 
-  - ./experiments/Regression/LinearRegression:
-    - linear-regression.ipynb:
-    - linear-regression-submission.csv:
-  - ./experiments/Regression/PolynomialRegression: 
-    - polynomial_regression.ipynb:
-    - polynomial-regression-submission.csv:
+- c. ./experiments/Regression: Using various SkLearn regressors
+  - ./experiments/Regression/LinearRegression: Regressor using the Linear Regressor model
+    - linear-regression.ipynb: ipynb file explaining how sklearn's linear regressor model was used to predict the house rental prices
+    - linear-regression-submission.csv: submission file to kaggle using the linear regression model
+  - ./experiments/Regression/PolynomialRegression: Regressor using the Polynomial Regressor model
+    - polynomial_regression.ipynb: ipynb file explaining how sklearn's polynomial regressor model was used to predict the house rental prices
+    - polynomial-regression-submission.csv: submission file to kaggle using the polynomial regression model
 <br>
-- d. ./experiments/SVM: 
-  - svm.ipynb:
-  - svm-submission.csv:
+- d. ./experiments/SVM: Regressor using the Support Vector Model
+  - svm.ipynb: ipynb file explaining how svm model was used to predict the house rental prices
+  - svm-submission.csv: submission file to kaggle using the SVM model
 <br>
-- c. ./experiments/Trees: 
-  - ./experiments/Trees/DecisionTreeRegressor:
-    - decision_tree_regressor.ipynb:
-    - decision-tree-submission.csv:
-  - ./experiments/Trees/ExtraTreeRegressor: 
-    - extra_tree_regressor.ipynb:
-    - extra-tree-submission.csv:
-  - ./experiments/Trees/RandomForestRegressor:
-    - random_forest.ipynb:
-    - random-forest-submission.csv:
-  - ./experiments/Trees/XGBoostRegressor: 
-    - xgboost_regressor.ipynb:
-    - xgboost-submission.csv:
+- c. ./experiments/Trees: Using vairous Tree based regressors
+  - ./experiments/Trees/DecisionTreeRegressor: Regressor using the Decision Tree Regressor model
+    - decision_tree_regressor.ipynb: ipynb file explaining how decision tree regressor model was used to predict the house rental prices
+    - decision-tree-submission.csv: submission file to kaggle using the decision tree regressor model
+  - ./experiments/Trees/ExtraTreeRegressor: Regressor using the Extra Tree Regressor model
+    - extra_tree_regressor.ipynb: ipynb file explaining how extra tree regressor model was used to predict the house rental prices
+    - extra-tree-submission.csv: submission file to kaggle using the extra tree regressor model
+  - ./experiments/Trees/RandomForestRegressor: Regressor using the Random Tree Regressor model
+    - random_forest.ipynb: ipynb file explaining how random forest regressor model was used to predict the house rental prices
+    - random-forest-submission.csv: submission file to kaggle using the random forest regressor model
+  - ./experiments/Trees/XGBoostRegressor: Regressor using the XG-Boost Tree Regressor model 
+    - xgboost_regressor.ipynb: ipynb file explaining how xgboost tree regressor model was used to predict the house rental prices
+    - xgboost-submission.csv: submission file to kaggle using the xgboost regressor model
 <br>
   
 <b>4. ./resources</b>: Contains files which were either generated during analysis or referenced in other ipynb files
