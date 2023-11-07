@@ -30,29 +30,29 @@ These cleaned datasets were then used to train each regression model which can b
   - get_economic_indicators_from_aux_data.ipynb: Analyses the EDA steps which can be done on the sg-coe-prices & sg-stock-prices datasets.
   - get_location_distances_from_aux_data.ipynb: Analyses the EDA steps which can be done on the sg-mrt-existing-stations & sg-mrt-planned-stations datasets.
 <br>
-- c. ./data/eda: 
-  - EDA.ipynb: 
-  - process_coe_prices.py: 
-  - process_stock_prices.py: 
-  - process_location_info.py:
-  - process_town_importance.py: 
-  - process_main_dataset.py: 
-  - process.py: 
+- c. ./data/eda: Contains code to perform the eda along with an ipynb which explains each step
+  - EDA.ipynb: A ipynb notebook which explains the rationale behind every EDA step done for this project
+  - process_coe_prices.py: A script which reads the coe_prices auxiliary dataset and extracts information from it as described in the get_economic_indicators_from_aux_data.ipynb notebook
+  - process_stock_prices.py: A script which reads the stock_prices auxiliary dataset and extracts information from it as described in the get_economic_indicators_from_aux_data.ipynb notebook
+  - process_location_info.py: A script which extracts the distances from each house to the nearest mrt, planned mrt, primary school and shopping mall by using the datasets in the auxiliary datasets.
+  - process_town_importance.py: A script which computes the town_importance and town_centrality values using the datasets in './datasets/additional-town-centrality-data'.
+  - process_main_dataset.py: A script which handles the cleaning and normalizing of all columns in the dataset.
+  - process.py: An orchestrator script which combines all the eda steps defined in the other files mentioned above.
 <br>
 
 <b>2. ./datasets</b>: This only has the auxilary datasets folder but other folders can be created by running the process.py script mentioned above.
 <br>
 - a. ./datasets/auxiliary-data: Contains the auxiliary datasets which will have been downloaded from the kaggle link mentioned above
-  - sg-coe-prices.csv: 
-  - sg-mrt-existing-stations.csv: 
-  - sg-mrt-planned-stations.csv: 
-  - sg-primary-schools.csv: 
-  - sg-shopping-malls.csv:
-  - sg-stock-prices.csv:
+  - sg-coe-prices.csv: Downloaded dataset from kaggle which contains the 
+  - sg-mrt-existing-stations.csv: Downloaded dataset from kaggle which contains information on the existing MRT stations in Singapore 
+  - sg-mrt-planned-stations.csv: Downloaded dataset from kaggle which contains information on the future MRT stations which will be opened in Singapore 
+  - sg-primary-schools.csv: Downloaded dataset from kaggle which contains information on the primary schools present in Singapore 
+  - sg-shopping-malls.csv: Downloaded dataset from kaggle which contains information on the shopping malls present in Singapore
+  - sg-stock-prices.csv: Downloaded dataset from kaggle which contains the stock price information for each company
 <br>
-- b. ./datasets/additional-town-centrality-data: 
-  - town_centroids_radius.csv: 
-  - town_importance_centrality.csv: 
+- b. ./datasets/additional-town-centrality-data: These datasets were created manually by following the process described in "./data/eda/EDA.ipynb"
+  - town_centroids_radius.csv: A small dataset which contains the centroid and radius information for each town
+  - town_importance_centrality.csv: A small dataset which contains the town, its 'importance' (see EDA ipynb for what this means) and its page rank centrality.
 <br>
 - c. ./datasets/final: Will contain the final cleaned dataset after running the process.py script on the downloaded datasets
   - train_clean.csv: The final cleaned train data used for all the experiments and models.
@@ -99,13 +99,13 @@ These cleaned datasets were then used to train each regression model which can b
     - xgboost-submission.csv:
 <br>
   
-<b>4. ./resources</b>: TODO
-- a. ./resources/before_eda_analysis_reports/*
-- b. ./resources/after_eda_analysis_report/*
-- c. ./resources/useful_pics/*
+<b>4. ./resources</b>: Contains files which were either generated during analysis or referenced in other ipynb files
+- a. ./resources/before_eda_analysis_reports/*: Contains the generated pandas profiling reports for all the original datasets which were helpful in coming up with the EDA steps performed in this project.
+- b. ./resources/after_eda_analysis_report/*: Contains the generated pandas profiling report after cleaning the train dataset using the EDA steps
+- c. ./resources/useful_pics/*: Contains pictures which are used across the various ipynb files
 <br>
 
-<b>5. ./utils</b>: TODO
-- a. constants.py
-- a. data_utils.py
+<b>5. ./utils</b>: Folder containing util code
+- a. constants.py: defines constants which are used in the EDA process
+- a. data_utils.py: defines modular functions for manipulating data which are used across the various scripts in the "./data/eda" folder
 <br>
