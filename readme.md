@@ -114,3 +114,5 @@ These cleaned datasets were then used to train each regression model which can b
 - `constants.py`: Defines constants used in the EDA process.
 
 - `data_utils.py`: Defines modular functions for manipulating data used across the various scripts in the "./data/eda" folder.
+
+**6. report.pdf**: The report describing project
