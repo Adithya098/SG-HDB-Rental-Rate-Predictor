@@ -32,9 +32,6 @@ def extract_town_centrality(mrt_input_path, mrt_planned_input_path, mall_input_p
     num_towns = len(df_town['town'])
     centrality = calculate_centrality(importance_score_of_towns, centroid_distance_matrix, num_towns)
 
-    #df_town['importance'] = importance_score_of_towns
-    #df_town['centrality_page_rank'] = centrality
-
     df_town_importance = pd.DataFrame()
     df_town_importance['town'] = df_town['town']
     df_town_importance['importance'] = importance_score_of_towns
